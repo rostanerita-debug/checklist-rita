@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Budget RR">
+<meta name="theme-color" content="#ffffff">
+<link rel="manifest" href="manifest.json">
+<title>Budget RR — Rita Rostane</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --gold:#B8963E;--gold-light:#F0DFA0;--gold-pale:#FBF7ED;
+  --noir:#1A1612;--gris:#6B6660;--gris-light:#F5F3F0;--gris-mid:#E8E4DF;
+  --blanc:#FFFFFF;
+  --rose:#C85F6E;--violet:#7C5CBF;--vert:#2E8B62;--amber:#D4882A;
+  --radius:16px;--radius-sm:10px;
+  --shadow:0 2px 20px rgba(26,22,18,0.08);
+  --shadow-lg:0 8px 40px rgba(26,22,18,0.12);
+}
+body{background:#F5F3F0;font-family:'DM Sans',sans-serif;color:var(--noir);min-height:100vh;padding-bottom:80px;overscroll-behavior:none}
+h1,h2,h3{font-family:'Cormorant Garamond',serif}
+
+/* NAV */
+.nav{position:fixed;bottom:0;left:0;right:0;background:var(--blanc);border-top:1px solid var(--gris-mid);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -4px 20px rgba(26,22,18,0.06)}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 4px 8px;cursor:pointer;border:none;background:none;transition:all .2s;gap:3px}
+.nav-item .nav-icon{font-size:20px;transition:transform .2s}
+.nav-item .nav-lbl{font-size:10px;font-family:'DM Sans',sans-serif;font-weight:500;color:var(--gris);transition:color .2s;letter-spacing:.3px}
+.nav-item.active .nav-lbl{color:var(--gold)}
+.nav-item.active .nav-icon{transform:scale(1.1)}
+.nav-item:active{opacity:.7}
+
+/* SCREENS */
+.screen{display:none;max-width:500px;margin:0 auto;padding:0 16px}
+.screen.active{display:block}
+
+/* HEADER */
+.page-header{padding:52px 0 20px;border-bottom:1px solid var(--gris-mid);margin-bottom:20px}
+.page-header .eyebrow{font-size:10px;letter-spacing:3px;color:var(--gold);font-weight:600;text-transform:uppercase;margin-bottom:6px}
+.page-header h1{font-size:32px;font-weight:600;color:var(--noir);line-height:1.1}
+.page-header .subtitle{font-size:13px;color:var(--gris);margin-top:4px}
+
+/* CARDS */
+.card{background:var(--blanc);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin-bottom:12px}
+.card-gold{background:linear-gradient(135deg,var(--noir) 0%,#2D2520 100%);color:var(--blanc)}
+.card-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gris);font-weight:600;margin-bottom:6px}
+.card-label-light{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.5);font-weight:600;margin-bottom:6px}
+.card-value{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:600;line-height:1}
+.card-value-light{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:600;color:var(--blanc);line-height:1}
+.card-sub{font-size:12px;color:var(--gris);margin-top:4px}
+.card-sub-light{font-size:12px;color:rgba(255,255,255,0.55);margin-top:4px}
+
+/* GRID 2 COL */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+
+/* PROGRESS BAR */
+.prog-wrap{background:var(--gris-mid);border-radius:99px;height:4px;overflow:hidden;margin:10px 0 4px}
+.prog-fill{height:100%;border-radius:99px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+
+/* METRIC SMALL */
+.metric-sm{background:var(--gris-light);border-radius:var(--radius-sm);padding:12px 14px}
+.metric-sm .lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gris);font-weight:600;margin-bottom:4px}
+.metric-sm .val{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600}
+
+/* SECTION TITLE */
+.section-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--noir);margin:20px 0 10px;display:flex;align-items:center;gap:8px}
+.section-title::after{content:'';flex:1;height:1px;background:var(--gris-mid)}
+
+/* CHECKLIST */
+.cat-header{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-radius:var(--radius-sm) var(--radius-sm) 0 0;margin-top:10px}
+.cat-items{background:var(--blanc);border-radius:0 0 var(--radius-sm) var(--radius-sm);box-shadow:var(--shadow);overflow:hidden;margin-bottom:12px}
+.charge-row{display:flex;align-items:center;gap:10px;padding:13px 14px;border-bottom:1px solid var(--gris-light);transition:background .15s;cursor:default}
+.charge-row:last-child{border-bottom:none}
+.charge-row.done{opacity:.55}
+.check-btn{width:28px;height:28px;border-radius:7px;border:1.5px solid var(--gris-mid);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s;flex-shrink:0;font-size:13px;font-weight:700}
+.check-btn.checked{border:none;color:#fff}
+.check-btn:active{transform:scale(.9)}
+.charge-label{flex:1;font-size:13px;font-weight:500;color:var(--noir)}
+.charge-label.done{text-decoration:line-through;color:var(--gris)}
+.charge-amount{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;cursor:pointer;white-space:nowrap}
+.charge-amount.done{color:var(--gris);text-decoration:line-through}
+.badge-sm{display:inline-flex;padding:2px 7px;border-radius:20px;font-size:9px;font-weight:600;letter-spacing:.5px}
+.del-btn{font-size:12px;color:#D4A0A0;cursor:pointer;background:none;border:none;padding:0 3px;opacity:0;transition:opacity .15s}
+.charge-row:hover .del-btn{opacity:1}
+
+/* INPUT INLINE */
+.inp-inline{background:var(--gris-light);border:1.5px solid var(--gold);border-radius:6px;font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;padding:3px 7px;width:80px;text-align:right;outline:none;color:var(--noir)}
+.inp-block{background:var(--gris-light);border:1.5px solid var(--gris-mid);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:14px;padding:10px 14px;width:100%;outline:none;color:var(--noir);transition:border .2s}
+.inp-block:focus{border-color:var(--gold)}
+
+/* BOTTOM SHEET */
+.overlay{position:fixed;inset:0;background:rgba(26,22,18,0.45);z-index:200;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--blanc);border-radius:22px 22px 0 0;padding:24px 20px calc(24px + env(safe-area-inset-bottom));width:100%;max-width:500px;animation:slideUp .22s ease-out}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.sheet-handle{width:36px;height:4px;background:var(--gris-mid);border-radius:99px;margin:0 auto 20px}
+.sheet-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;margin-bottom:18px}
+
+/* BUTTONS */
+.btn-primary{width:100%;padding:14px;background:var(--noir);border:none;border-radius:var(--radius-sm);color:var(--blanc);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:.5px;transition:all .15s}
+.btn-primary:active{transform:scale(.97);background:#2D2520}
+.btn-ghost{width:100%;padding:13px;background:none;border:1.5px solid var(--gris-mid);border-radius:var(--radius-sm);color:var(--gris);font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;transition:all .15s}
+.btn-ghost:active{background:var(--gris-light)}
+.btn-gold{width:100%;padding:14px;background:linear-gradient(135deg,var(--gold),#D4A84B);border:none;border-radius:var(--radius-sm);color:var(--blanc);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:.5px;transition:all .15s;box-shadow:0 4px 14px rgba(184,150,62,0.35)}
+.btn-gold:active{transform:scale(.97)}
+
+/* CAT PILLS */
+.cat-pill{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.cat-pill button{padding:7px 14px;border-radius:20px;font-size:11px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;transition:all .15s;border:1.5px solid var(--gris-mid);background:none;color:var(--gris)}
+.cat-pill button.active{border-color:transparent;color:#fff}
+.cat-pill button:active{transform:scale(.95)}
+
+/* STATS */
+.bar-chart{margin:8px 0}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.bar-lbl{font-size:12px;color:var(--gris);width:90px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-track{flex:1;background:var(--gris-light);border-radius:99px;height:8px;overflow:hidden}
+.bar-bar{height:100%;border-radius:99px;transition:width .8s cubic-bezier(.4,0,.2,1)}
+.bar-val{font-size:11px;font-weight:600;color:var(--gris);width:70px;text-align:right;flex-shrink:0}
+
+/* HISTORIQUE */
+.hist-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--gris-light)}
+.hist-row:last-child{border-bottom:none}
+.hist-mois{font-weight:500;font-size:14px}
+.hist-sub{font-size:11px;color:var(--gris);margin-top:2px}
+.hist-right{text-align:right}
+.hist-pct{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600}
+
+/* TOGGLE */
+.toggle-wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--gris-light)}
+.toggle-wrap:last-child{border-bottom:none}
+.toggle-lbl{font-size:14px;font-weight:500}
+.toggle-sub{font-size:11px;color:var(--gris);margin-top:2px}
+.toggle{position:relative;width:44px;height:26px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--gris-mid);border-radius:99px;transition:.2s;cursor:pointer}
+.toggle-slider:before{content:'';position:absolute;width:20px;height:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+input:checked+.toggle-slider{background:var(--gold)}
+input:checked+.toggle-slider:before{transform:translateX(18px)}
+
+/* CONFETTI */
+.confetti{position:fixed;pointer-events:none;z-index:9999;font-size:22px;animation:fall 3s ease-in forwards}
+@keyframes fall{0%{opacity:1;transform:translateY(-20px) rotate(0)}100%{opacity:0;transform:translateY(100vh) rotate(700deg)}}
+
+select{-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B6660' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:var(--gris-mid);border-radius:99px}
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+
+<nav class="nav">
+  <button class="nav-item active" onclick="goTo('dashboard')" id="nav-dashboard">
+    <span class="nav-icon">⌂</span>
+    <span class="nav-lbl">Accueil</span>
+  </button>
+  <button class="nav-item" onclick="goTo('checklist')" id="nav-checklist">
+    <span class="nav-icon">✓</span>
+    <span class="nav-lbl">Checklist</span>
+  </button>
+  <button class="nav-item" onclick="goTo('stats')" id="nav-stats">
+    <span class="nav-icon">◉</span>
+    <span class="nav-lbl">Stats</span>
+  </button>
+  <button class="nav-item" onclick="goTo('settings')" id="nav-settings">
+    <span class="nav-icon">◈</span>
+    <span class="nav-lbl">Profil</span>
+  </button>
+</nav>
+
+<script>
+// ─── DONNÉES ───────────────────────────────────────────────
+const MOIS_FR = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+const MOIS_SHORT = ["Jan","Fév","Mar","Avr","Mai","Juin","Juil","Aoû","Sep","Oct","Nov","Déc"];
+const now = new Date();
+
+const CAT_CFG = {
+  "ÉPARGNE":            {color:"#2E8B62", bg:"rgba(46,139,98,0.1)",  icon:"◈", label:"Épargne"},
+  "CHARGES FIXES":      {color:"#7C5CBF", bg:"rgba(124,92,191,0.1)", icon:"⊞", label:"Charges fixes"},
+  "DÉPENSES VARIABLES": {color:"#D4882A", bg:"rgba(212,136,42,0.1)", icon:"◎", label:"Dépenses variables"},
+};
+
+const INIT = {
+  s1:[
+    {id:1, cat:"ÉPARGNE",            label:"Épargne mensuelle 1",  montant:4000, compte:"BOA Épargne",   ech:"J1"},
+    {id:2, cat:"ÉPARGNE",            label:"Épargne mensuelle 2",  montant:1000, compte:"BOA Principal", ech:"J1"},
+    {id:3, cat:"CHARGES FIXES",      label:"Crédit (mensualité)",  montant:2800, compte:"BOA Principal", ech:"J1"},
+    {id:4, cat:"CHARGES FIXES",      label:"Aide à maman",         montant:3000, compte:"BOA Principal", ech:"J1"},
+    {id:5, cat:"CHARGES FIXES",      label:"Abonnement téléphone", montant: 299, compte:"BOA Principal", ech:"J5"},
+    {id:6, cat:"CHARGES FIXES",      label:"Netflix",              montant:  65, compte:"BOA Principal", ech:"J5"},
+    {id:7, cat:"CHARGES FIXES",      label:"Spotify",              montant:  75, compte:"BOA Principal", ech:"J5"},
+    {id:8, cat:"CHARGES FIXES",      label:"Shahid",               montant: 110, compte:"BOA Principal", ech:"J5"},
+    {id:9, cat:"CHARGES FIXES",      label:"iCloud",               montant:  35, compte:"BOA Principal", ech:"J5"},
+    {id:10,cat:"CHARGES FIXES",      label:"Manucure",             montant: 400, compte:"BOA Principal", ech:"Variable"},
+    {id:11,cat:"DÉPENSES VARIABLES", label:"Carburant",            montant:1200, compte:"CIH Variable",  ech:"Variable"},
+    {id:12,cat:"DÉPENSES VARIABLES", label:"Brushing",             montant: 250, compte:"CIH Variable",  ech:"Variable"},
+    {id:13,cat:"DÉPENSES VARIABLES", label:"Sorties semaine",      montant:2000, compte:"CIH Variable",  ech:"Variable"},
+  ],
+  s2:[
+    {id:1, cat:"ÉPARGNE",            label:"Épargne mensuelle 1",  montant:4000, compte:"BOA Épargne",   ech:"J1"},
+    {id:2, cat:"ÉPARGNE",            label:"Épargne mensuelle 2",  montant:1000, compte:"BOA Principal", ech:"J1"},
+    {id:3, cat:"CHARGES FIXES",      label:"Crédit (mensualité)",  montant:2800, compte:"BOA Principal", ech:"J1"},
+    {id:4, cat:"CHARGES FIXES",      label:"Aide à maman",         montant:3000, compte:"BOA Principal", ech:"J1"},
+    {id:5, cat:"CHARGES FIXES",      label:"CIMR (retraite)",      montant:1500, compte:"BOA Principal", ech:"J1"},
+    {id:6, cat:"CHARGES FIXES",      label:"Abonnement téléphone", montant: 299, compte:"BOA Principal", ech:"J5"},
+    {id:7, cat:"CHARGES FIXES",      label:"Netflix",              montant:  65, compte:"BOA Principal", ech:"J5"},
+    {id:8, cat:"CHARGES FIXES",      label:"Spotify",              montant:  75, compte:"BOA Principal", ech:"J5"},
+    {id:9, cat:"CHARGES FIXES",      label:"Shahid",               montant: 110, compte:"BOA Principal", ech:"J5"},
+    {id:10,cat:"CHARGES FIXES",      label:"iCloud",               montant:  35, compte:"BOA Principal", ech:"J5"},
+    {id:11,cat:"CHARGES FIXES",      label:"Manucure",             montant: 400, compte:"BOA Principal", ech:"Variable"},
+    {id:12,cat:"DÉPENSES VARIABLES", label:"Carburant",            montant:1200, compte:"CIH Variable",  ech:"Variable"},
+    {id:13,cat:"DÉPENSES VARIABLES", label:"Brushing",             montant: 250, compte:"CIH Variable",  ech:"Variable"},
+    {id:14,cat:"DÉPENSES VARIABLES", label:"Sorties semaine",      montant:4000, compte:"CIH Variable",  ech:"Variable"},
+  ]
+};
+
+let nextId = 200;
+
+function loadState() {
+  try {
+    const s = localStorage.getItem("budget_rr_v1");
+    if (s) return JSON.parse(s);
+  } catch(e){}
+  return {
+    profil:"s1", mois:now.getMonth(), annee:now.getFullYear(),
+    sal:{s1:17500, s2:24000},
+    charges:{s1:INIT.s1.map(c=>({...c})), s2:INIT.s2.map(c=>({...c}))},
+    checked:{s1:{}, s2:{}},
+    dates:{s1:{}, s2:{}},
+    history:{},
+    filterCat:"TOUT",
+    currentScreen:"dashboard",
+  };
+}
+
+function save() { try { localStorage.setItem("budget_rr_v1", JSON.stringify(S)); } catch(e){} }
+
+let S = loadState();
+let showAdd = false;
+let newLabel="", newMnt="", newCat="CHARGES FIXES", newEch="Variable";
+let editMntId=null, editMntVal="";
+let editLblId=null, editLblVal="";
+let editSal=false, editSalVal="";
+
+function fmt(n){ return Number(n).toLocaleString("fr-FR")+" MAD"; }
+function fmtShort(n){ return Number(n).toLocaleString("fr-FR"); }
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function escJs(s){ return String(s).replace(/\\/g,"\\\\").replace(/'/g,"\\'"); }
+
+function getC(){ return S.charges[S.profil]; }
+function getCk(){ return S.checked[S.profil]; }
+function getDt(){ return S.dates[S.profil]; }
+function getSal(){ return S.sal[S.profil]; }
+
+function calcTotals(){
+  const ch=getC(), ck=getCk(), sal=getSal();
+  const total=ch.reduce((s,c)=>s+Number(c.montant),0);
+  const paye=ch.filter(c=>ck[c.id]).reduce((s,c)=>s+Number(c.montant),0);
+  const reste=total-paye;
+  const resteReel=sal-paye;
+  const pct=total>0?Math.round((paye/total)*100):0;
+  const nb=ch.filter(c=>ck[c.id]).length;
+  return {total,paye,reste,resteReel,pct,nb,sal};
+}
+
+// ─── NAVIGATION ────────────────────────────────────────────
+function goTo(screen) {
+  S.currentScreen = screen;
+  document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
+  document.getElementById("nav-"+screen)?.classList.add("active");
+  render();
+}
+
+// ─── ACTIONS ───────────────────────────────────────────────
+function toggle(id){
+  const n={...getCk(),[id]:!getCk()[id]};
+  if(!getCk()[id]){
+    const d=new Date().toLocaleDateString("fr-FR",{day:"2-digit",month:"2-digit"});
+    S.dates[S.profil]={...S.dates[S.profil],[id]:d};
+  }
+  S.checked[S.profil]=n;
+  // Sauvegarder dans l'historique
+  const key=`${S.profil}-${S.annee}-${S.mois}`;
+  const {paye,total}=calcTotalsFrom(getC(),n,getSal());
+  S.history[key]={mois:S.mois,annee:S.annee,profil:S.profil,paye,total,pct:total>0?Math.round((paye/total)*100):0};
+  save();
+  if(getC().every(c=>n[c.id])){ showConfetti(); }
+  render();
+}
+
+function calcTotalsFrom(ch,ck,sal){
+  const total=ch.reduce((s,c)=>s+Number(c.montant),0);
+  const paye=ch.filter(c=>ck[c.id]).reduce((s,c)=>s+Number(c.montant),0);
+  return {total,paye,resteReel:sal-paye};
+}
+
+function updateMontant(id,val){
+  const v=parseInt(String(val).replace(/\D/g,""),10);
+  if(!isNaN(v)&&v>=0) S.charges[S.profil]=S.charges[S.profil].map(c=>c.id===id?{...c,montant:v}:c);
+  editMntId=null; save(); render();
+}
+
+function updateLabel(id,val){
+  if(val.trim()) S.charges[S.profil]=S.charges[S.profil].map(c=>c.id===id?{...c,label:val.trim()}:c);
+  editLblId=null; save(); render();
+}
+
+function deleteCharge(id){
+  if(!confirm("Supprimer cette charge ?")) return;
+  S.charges[S.profil]=S.charges[S.profil].filter(c=>c.id!==id);
+  const ck={...getCk()}; delete ck[id]; S.checked[S.profil]=ck;
+  save(); render();
+}
+
+function addCharge(){
+  if(!newLabel.trim()||!newMnt) return;
+  const v=parseInt(newMnt.replace(/\D/g,""),10);
+  if(isNaN(v)||v<=0) return;
+  const compte={"ÉPARGNE":"BOA Épargne","CHARGES FIXES":"BOA Principal","DÉPENSES VARIABLES":"CIH Variable"}[newCat];
+  S.charges[S.profil].push({id:nextId++,cat:newCat,label:newLabel.trim(),montant:v,compte,ech:newEch});
+  newLabel="";newMnt="";newCat="CHARGES FIXES";newEch="Variable";
+  showAdd=false; save(); render();
+}
+
+function saveSalaire(){
+  const v=parseInt(editSalVal,10);
+  if(!isNaN(v)&&v>0) S.sal[S.profil]=v;
+  editSal=false; save(); render();
+}
+
+function resetMonth(){
+  if(!confirm("Réinitialiser les paiements de ce mois ?")) return;
+  S.checked[S.profil]={}; S.dates[S.profil]={};
+  save(); render();
+}
+
+function showConfetti(){
+  ["🎉","✨","💰","🎊","⭐","💎"].forEach((e,i)=>{
+    const el=document.createElement("div");
+    el.className="confetti"; el.textContent=e;
+    el.style.left=(6+i*14)+"%"; el.style.top="-30px";
+    el.style.animationDelay=(i*.12)+"s";
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),3200);
+  });
+}
+
+// ─── RENDER ────────────────────────────────────────────────
+function render(){
+  const screen = S.currentScreen || "dashboard";
+  let html = "";
+
+  if(screen === "dashboard") html = renderDashboard();
+  else if(screen === "checklist") html = renderChecklist();
+  else if(screen === "stats") html = renderStats();
+  else if(screen === "settings") html = renderSettings();
+
+  document.getElementById("app").innerHTML = html;
+
+  // Focus auto
+  if(editSal){ const el=document.getElementById("sal-inp"); if(el){el.focus();el.select();} }
+}
+
+// ─── DASHBOARD ─────────────────────────────────────────────
+function renderDashboard(){
+  const {total,paye,reste,resteReel,pct,nb,sal}=calcTotals();
+  const ch=getC(); const ck=getCk();
+  const resteColor=resteReel<0?"#C85F6E":resteReel<2000?"#D4882A":"#2E8B62";
+
+  // Prochaines charges non payées
+  const upcoming=ch.filter(c=>!ck[c.id]).slice(0,3);
+
+  return `
+  <div class="screen active" id="screen-dashboard">
+    <div class="page-header">
+      <div class="eyebrow">Budget personnel</div>
+      <h1>Bonjour, Rita</h1>
+      <div class="subtitle">${MOIS_FR[S.mois]} ${S.annee} · ${S.profil==="s1"?"Salaire actuel":"Nouveau salaire"}</div>
+    </div>
+
+    <!-- Carte principale -->
+    <div class="card card-gold" style="padding:22px">
+      <div class="card-label-light">Salaire net du mois</div>
+      <div class="card-value-light">${fmt(sal)}</div>
+      <div class="prog-wrap" style="background:rgba(255,255,255,0.15)">
+        <div class="prog-fill" style="width:${pct}%;background:linear-gradient(90deg,#B8963E,#F0DFA0)"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="card-sub-light">${nb}/${ch.length} charges payées</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:#F0DFA0">${pct}%</div>
+      </div>
+    </div>
+
+    <!-- 4 métriques -->
+    <div class="grid2">
+      <div class="metric-sm">
+        <div class="lbl">Total charges</div>
+        <div class="val">${fmtShort(total)}</div>
+        <div style="font-size:10px;color:var(--gris);margin-top:2px">MAD</div>
+      </div>
+      <div class="metric-sm">
+        <div class="lbl">Déjà payé</div>
+        <div class="val" style="color:#2E8B62">${fmtShort(paye)}</div>
+        <div style="font-size:10px;color:var(--gris);margin-top:2px">MAD</div>
+      </div>
+      <div class="metric-sm">
+        <div class="lbl">Reste à payer</div>
+        <div class="val" style="color:#D4882A">${fmtShort(reste)}</div>
+        <div style="font-size:10px;color:var(--gris);margin-top:2px">MAD</div>
+      </div>
+      <div class="metric-sm" style="background:${resteReel<0?"#FDF0F0":resteReel<2000?"#FDF6EC":"#F0FAF5"}">
+        <div class="lbl">💰 Reste réel</div>
+        <div class="val" style="color:${resteColor}">${fmtShort(resteReel)}</div>
+        <div style="font-size:10px;color:${resteColor};margin-top:2px">${resteReel<0?"⚠ Découvert":resteReel<2000?"⚡ Serré":"✓ OK"}</div>
+      </div>
+    </div>
+
+    <!-- Prochaines charges -->
+    ${upcoming.length>0?`
+    <div class="section-title">À venir</div>
+    <div class="card" style="padding:0">
+      ${upcoming.map((c,i)=>{
+        const cfg=CAT_CFG[c.cat];
+        return `<div class="charge-row" style="${i<upcoming.length-1?'':'border-bottom:none'}">
+          <div style="width:8px;height:8px;border-radius:50%;background:${cfg.color};flex-shrink:0"></div>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:500">${esc(c.label)}</div>
+            <div style="font-size:10px;color:var(--gris);margin-top:1px">${c.ech} · ${c.compte}</div>
+          </div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:var(--gris)">${fmt(c.montant)}</div>
+        </div>`;
+      }).join("")}
+    </div>` : `
+    <div class="section-title">Ce mois-ci</div>
+    <div class="card" style="text-align:center;padding:28px">
+      <div style="font-size:28px;margin-bottom:8px">🏆</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600">Toutes les charges payées !</div>
+      <div style="font-size:12px;color:var(--gris);margin-top:6px">Il te reste <strong style="color:#2E8B62">${fmt(resteReel)}</strong> en poche</div>
+    </div>`}
+
+    <!-- Répartition par catégorie -->
+    <div class="section-title">Répartition</div>
+    <div class="card">
+      ${Object.entries(CAT_CFG).map(([cat,cfg])=>{
+        const items=getC().filter(c=>c.cat===cat);
+        const catTotal=items.reduce((s,c)=>s+Number(c.montant),0);
+        const catPct=total>0?Math.round((catTotal/total)*100):0;
+        return `<div class="bar-row">
+          <div class="bar-lbl" style="color:${cfg.color};font-weight:500">${cfg.label}</div>
+          <div class="bar-track"><div class="bar-bar" style="width:${catPct}%;background:${cfg.color}"></div></div>
+          <div class="bar-val">${fmtShort(catTotal)}</div>
+        </div>`;
+      }).join("")}
+    </div>
+  </div>`;
+}
+
+// ─── CHECKLIST ─────────────────────────────────────────────
+function renderChecklist(){
+  const {total,paye,reste,pct,nb}=calcTotals();
+  const ch=getC(); const ck=getCk(); const dt=getDt();
+  const cats=["TOUT",...Object.keys(CAT_CFG)];
+  const filtered=S.filterCat==="TOUT"?ch:ch.filter(c=>c.cat===S.filterCat);
+  const grouped={};
+  filtered.forEach(c=>{ if(!grouped[c.cat])grouped[c.cat]=[]; grouped[c.cat].push(c); });
+
+  return `
+  ${showAdd?`
+  <div class="overlay" onclick="if(event.target.classList.contains('overlay')){showAdd=false;render()}">
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title">Ajouter une charge</div>
+
+      <div style="margin-bottom:12px">
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gris);font-weight:600;margin-bottom:7px">Catégorie</div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap">
+          ${Object.entries(CAT_CFG).map(([cat,cfg])=>`
+            <button onclick="newCat='${cat}';render()" style="padding:7px 13px;border-radius:20px;font-size:11px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;border:1.5px solid ${newCat===cat?cfg.color:'var(--gris-mid)'};background:${newCat===cat?cfg.bg:'none'};color:${newCat===cat?cfg.color:'var(--gris)'}">
+              ${cfg.icon} ${cfg.label}
+            </button>`).join("")}
+        </div>
+      </div>
+
+      <div style="margin-bottom:12px">
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gris);font-weight:600;margin-bottom:5px">Libellé</div>
+        <input class="inp-block" id="inp-label" type="text" placeholder="Ex : Salle de sport" value="${esc(newLabel)}" oninput="newLabel=this.value" onkeydown="if(event.key==='Enter')document.getElementById('inp-mnt').focus()">
+      </div>
+
+      <div style="margin-bottom:12px">
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gris);font-weight:600;margin-bottom:5px">Montant (MAD)</div>
+        <input class="inp-block" id="inp-mnt" type="number" inputmode="numeric" placeholder="Ex : 350" value="${newMnt}" oninput="newMnt=this.value" onkeydown="if(event.key==='Enter')addCharge()">
+      </div>
+
+      <div style="margin-bottom:20px">
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gris);font-weight:600;margin-bottom:5px">Échéance</div>
+        <div style="display:flex;gap:6px">
+          ${["J1","J5","J10","Variable"].map(e=>`<button onclick="newEch='${e}';render()" style="flex:1;padding:8px;border-radius:var(--radius-sm);font-size:11px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;border:1.5px solid ${newEch===e?"var(--gold)":"var(--gris-mid)"};background:${newEch===e?"var(--gold-pale)":"none"};color:${newEch===e?"var(--gold)":"var(--gris)"}">${e}</button>`).join("")}
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px">
+        <button class="btn-ghost" onclick="showAdd=false;render()">Annuler</button>
+        <button class="btn-gold" onclick="addCharge()">Ajouter</button>
+      </div>
+    </div>
+  </div>`:``}
+
+  <div class="screen active" id="screen-checklist">
+    <div class="page-header">
+      <div class="eyebrow">${MOIS_FR[S.mois]} ${S.annee}</div>
+      <h1>Checklist</h1>
+      <div class="subtitle">${nb}/${ch.length} charges · ${fmt(paye)} payés</div>
+    </div>
+
+    <!-- Mini résumé -->
+    <div class="card" style="padding:14px 16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span style="font-size:12px;color:var(--gris)">Progression du mois</span>
+        <span style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600">${pct}%</span>
+      </div>
+      <div class="prog-wrap" style="margin:0">
+        <div class="prog-fill" style="width:${pct}%;background:linear-gradient(90deg,#B8963E,#D4A84B)"></div>
+      </div>
+    </div>
+
+    <!-- Filtres + Ajouter -->
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+      <div class="cat-pill" style="flex:1;margin:0">
+        ${cats.map(cat=>{
+          const cfg=cat==="TOUT"?null:CAT_CFG[cat];
+          const active=S.filterCat===cat;
+          return `<button onclick="S.filterCat='${cat}';render()" class="${active?'active':''}" style="${active&&cfg?`background:${cfg.color};border-color:${cfg.color}`:active?`background:var(--noir);border-color:var(--noir)`:""}">${cat==="TOUT"?"Tout":cfg.icon+" "+cfg.label.split(" ")[0]}</button>`;
+        }).join("")}
+      </div>
+      <button onclick="showAdd=true;render()" style="padding:7px 14px;border-radius:20px;background:var(--noir);color:#fff;border:none;font-size:11px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0">＋ Ajouter</button>
+    </div>
+
+    <div style="font-size:10px;color:var(--gris);text-align:center;margin-bottom:8px">Tape sur le montant pour modifier</div>
+
+    <!-- Liste -->
+    ${Object.entries(grouped).map(([cat,items])=>{
+      const cfg=CAT_CFG[cat];
+      const catTotal=items.reduce((s,c)=>s+Number(c.montant),0);
+      const catPaye=items.filter(c=>ck[c.id]).reduce((s,c)=>s+Number(c.montant),0);
+      return `
+      <div class="cat-header" style="background:${cfg.bg}">
+        <div style="display:flex;align-items:center;gap:7px">
+          <span style="color:${cfg.color};font-size:13px">${cfg.icon}</span>
+          <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:${cfg.color}">${cat}</span>
+        </div>
+        <span style="font-size:11px;color:${cfg.color};font-weight:500">${fmtShort(catPaye)} / ${fmtShort(catTotal)}</span>
+      </div>
+      <div class="cat-items">
+        ${items.map((c,i)=>{
+          const done=!!ck[c.id];
+          const isEM=editMntId===c.id;
+          const isEL=editLblId===c.id;
+          return `
+          <div class="charge-row${done?" done":""}">
+            <button class="check-btn${done?" checked":""}" onclick="toggle(${c.id})" style="${done?`background:${cfg.color}`:""}">
+              ${done?"✓":""}
+            </button>
+            <div style="flex:1;min-width:0">
+              ${isEL?`
+                <input class="inp-block" style="padding:4px 8px;font-size:13px" value="${esc(c.label)}" oninput="editLblVal=this.value" onblur="updateLabel(${c.id},editLblVal)" onkeydown="if(event.key==='Enter')updateLabel(${c.id},this.value);if(event.key==='Escape'){editLblId=null;render()}" autofocus>
+              `:`
+                <div style="display:flex;align-items:center;gap:4px">
+                  <span class="charge-label${done?" done":""}" onclick="editLblId=${c.id};editLblVal='${escJs(c.label)}';render()">${esc(c.label)}</span>
+                </div>
+              `}
+              <div style="display:flex;gap:4px;margin-top:3px;flex-wrap:wrap">
+                <span class="badge-sm" style="background:${cfg.bg};color:${cfg.color}">${c.ech}</span>
+                <span class="badge-sm" style="background:var(--gris-light);color:var(--gris)">${c.compte}</span>
+                ${done&&dt[c.id]?`<span class="badge-sm" style="background:#F0FAF5;color:#2E8B62">✓ ${dt[c.id]}</span>`:""}
+              </div>
+            </div>
+            ${isEM?`
+              <input class="inp-inline" type="number" inputmode="numeric" value="${editMntVal}" oninput="editMntVal=this.value" onblur="updateMontant(${c.id},editMntVal)" onkeydown="if(event.key==='Enter')updateMontant(${c.id},this.value);if(event.key==='Escape'){editMntId=null;render()}" autofocus>
+            `:`
+              <span class="charge-amount${done?" done":""}" onclick="editMntId=${c.id};editMntVal='${c.montant}';render()">${fmt(c.montant)}</span>
+            `}
+            <button class="del-btn" onclick="deleteCharge(${c.id})">✕</button>
+          </div>`;
+        }).join("")}
+      </div>`;
+    }).join("")}
+
+    <button onclick="resetMonth()" style="width:100%;padding:12px;background:none;border:1.5px solid var(--gris-mid);border-radius:var(--radius-sm);color:var(--gris);font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;margin-top:4px">↺ Réinitialiser le mois</button>
+  </div>`;
+}
+
+// ─── STATS ─────────────────────────────────────────────────
+function renderStats(){
+  const {total,paye,pct}=calcTotals();
+  const ch=getC(); const ck=getCk();
+
+  // Répartition par catégorie
+  const catData=Object.entries(CAT_CFG).map(([cat,cfg])=>{
+    const items=ch.filter(c=>c.cat===cat);
+    const t=items.reduce((s,c)=>s+Number(c.montant),0);
+    const p=items.filter(c=>ck[c.id]).reduce((s,c)=>s+Number(c.montant),0);
+    return {cat,cfg,total:t,paye:p,pct:total>0?Math.round((t/total)*100):0};
+  });
+
+  // Historique
+  const histKeys=Object.keys(S.history).sort().reverse().slice(0,6);
+  const histItems=histKeys.map(k=>S.history[k]);
+
+  // Évolution épargne (simulée sur 6 mois)
+  const epargneItems=ch.filter(c=>c.cat==="ÉPARGNE");
+  const epargneTotal=epargneItems.reduce((s,c)=>s+Number(c.montant),0);
+
+  return `
+  <div class="screen active" id="screen-stats">
+    <div class="page-header">
+      <div class="eyebrow">Analyse</div>
+      <h1>Statistiques</h1>
+      <div class="subtitle">${MOIS_FR[S.mois]} ${S.annee}</div>
+    </div>
+
+    <!-- Résumé du mois -->
+    <div class="grid2">
+      <div class="card" style="text-align:center;padding:16px">
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gris);font-weight:600;margin-bottom:6px">Taux de paiement</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:700;color:${pct>=80?"#2E8B62":pct>=50?"#D4882A":"#C85F6E"};line-height:1">${pct}%</div>
+        <div style="font-size:11px;color:var(--gris);margin-top:4px">${paye>=total?"Complété ✓":"En cours"}</div>
+      </div>
+      <div class="card" style="text-align:center;padding:16px">
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gris);font-weight:600;margin-bottom:6px">Épargne / mois</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:#2E8B62;line-height:1">${fmtShort(epargneTotal)}</div>
+        <div style="font-size:10px;color:var(--gris);margin-top:4px">MAD · ${Math.round((epargneTotal/getSal())*100)}% du salaire</div>
+      </div>
+    </div>
+
+    <!-- Répartition par catégorie -->
+    <div class="section-title">Répartition des charges</div>
+    <div class="card">
+      ${catData.map(({cat,cfg,total:t,pct:p})=>`
+        <div class="bar-row">
+          <div class="bar-lbl" style="color:${cfg.color};font-weight:600">${cfg.label}</div>
+          <div class="bar-track"><div class="bar-bar" style="width:${p}%;background:${cfg.color}"></div></div>
+          <div class="bar-val" style="color:${cfg.color}">${fmtShort(t)}</div>
+        </div>
+      `).join("")}
+      <div style="border-top:1px solid var(--gris-light);margin-top:8px;padding-top:8px;display:flex;justify-content:space-between">
+        <span style="font-size:12px;color:var(--gris)">Total</span>
+        <span style="font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600">${fmt(total)}</span>
+      </div>
+    </div>
+
+    <!-- Top charges -->
+    <div class="section-title">Top charges</div>
+    <div class="card" style="padding:0">
+      ${[...ch].sort((a,b)=>Number(b.montant)-Number(a.montant)).slice(0,5).map((c,i)=>{
+        const cfg=CAT_CFG[c.cat];
+        const pctCharge=total>0?Math.round((Number(c.montant)/total)*100):0;
+        return `<div class="charge-row" style="${i<4?'':'border-bottom:none'}">
+          <div style="width:24px;height:24px;border-radius:50%;background:${cfg.bg};display:flex;align-items:center;justify-content:center;font-size:11px;color:${cfg.color};font-weight:700;flex-shrink:0">${i+1}</div>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:500">${esc(c.label)}</div>
+            <div style="font-size:10px;color:var(--gris);margin-top:1px">${pctCharge}% du total</div>
+          </div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600">${fmt(c.montant)}</div>
+        </div>`;
+      }).join("")}
+    </div>
+
+    <!-- Historique -->
+    <div class="section-title">Historique</div>
+    <div class="card" style="padding:0 16px">
+      ${histItems.length>0?histItems.map(h=>`
+        <div class="hist-row">
+          <div>
+            <div class="hist-mois">${MOIS_FR[h.mois]} ${h.annee}</div>
+            <div class="hist-sub">${fmt(h.paye)} payés sur ${fmt(h.total)}</div>
+          </div>
+          <div class="hist-right">
+            <div class="hist-pct" style="color:${h.pct>=80?"#2E8B62":h.pct>=50?"#D4882A":"#C85F6E"}">${h.pct}%</div>
+            <div style="font-size:10px;color:var(--gris)">${h.profil==="s1"?"17 500":"24 000"} MAD</div>
+          </div>
+        </div>`).join(""):
+      `<div style="padding:24px;text-align:center;color:var(--gris);font-size:13px">
+        Coche des charges pour voir l'historique apparaître ici
+      </div>`}
+    </div>
+  </div>`;
+}
+
+// ─── SETTINGS ──────────────────────────────────────────────
+function renderSettings(){
+  const sal=getSal();
+  return `
+  <div class="screen active" id="screen-settings">
+    <div class="page-header">
+      <div class="eyebrow">Rita Rostane</div>
+      <h1>Profil</h1>
+      <div class="subtitle">Paramètres de ton budget</div>
+    </div>
+
+    <!-- Avatar -->
+    <div class="card" style="display:flex;align-items:center;gap:14px;padding:16px 18px">
+      <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--noir),#3D3020);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:#F0DFA0;flex-shrink:0">RR</div>
+      <div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600">Rita Rostane</div>
+        <div style="font-size:12px;color:var(--gris);margin-top:2px">Account Director · Casablanca</div>
+      </div>
+    </div>
+
+    <!-- Profil salaire -->
+    <div class="section-title">Salaire</div>
+    <div class="card" style="padding:0 16px">
+      <div class="toggle-wrap">
+        <div>
+          <div class="toggle-lbl">Profil actif</div>
+          <div class="toggle-sub">${S.profil==="s1"?"Salaire actuel (17 500 MAD)":"Nouveau salaire (24 000 MAD)"}</div>
+        </div>
+        <div style="display:flex;background:var(--gris-light);border-radius:8px;padding:3px;gap:3px">
+          <button onclick="S.profil='s1';save();render()" style="padding:5px 10px;border-radius:6px;font-size:11px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;border:none;background:${S.profil==="s1"?"var(--blanc)":"transparent"};color:${S.profil==="s1"?"var(--noir)":"var(--gris)"};box-shadow:${S.profil==="s1"?"0 1px 4px rgba(0,0,0,.1)":"none"}">S1</button>
+          <button onclick="S.profil='s2';save();render()" style="padding:5px 10px;border-radius:6px;font-size:11px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;border:none;background:${S.profil==="s2"?"var(--blanc)":"transparent"};color:${S.profil==="s2"?"var(--noir)":"var(--gris)"};box-shadow:${S.profil==="s2"?"0 1px 4px rgba(0,0,0,.1)":"none"}">S2</button>
+        </div>
+      </div>
+      <div class="toggle-wrap">
+        <div>
+          <div class="toggle-lbl">Salaire net mensuel</div>
+          <div class="toggle-sub">${S.profil==="s1"?"Compte Principal BOA":"Compte Principal BOA"}</div>
+        </div>
+        ${editSal?`
+          <div style="display:flex;align-items:center;gap:6px">
+            <input class="inp-inline" id="sal-inp" type="number" inputmode="numeric" style="width:95px" value="${editSalVal}" oninput="editSalVal=this.value" onblur="saveSalaire()" onkeydown="if(event.key==='Enter')saveSalaire();if(event.key==='Escape'){editSal=false;render()}">
+            <span style="font-size:11px;color:var(--gris)">MAD</span>
+          </div>
+        `:`
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600">${fmt(sal)}</span>
+            <button onclick="editSalVal='${sal}';editSal=true;render()" style="background:var(--gris-light);border:none;border-radius:6px;padding:4px 9px;font-size:11px;cursor:pointer;color:var(--gris)">✎</button>
+          </div>
+        `}
+      </div>
+    </div>
+
+    <!-- Période -->
+    <div class="section-title">Période</div>
+    <div class="card" style="padding:16px">
+      <div style="display:flex;gap:10px">
+        <div style="flex:1">
+          <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gris);font-weight:600;margin-bottom:5px">Mois</div>
+          <select class="inp-block" onchange="S.mois=+this.value;save();render()">
+            ${MOIS_FR.map((m,i)=>`<option value="${i}" ${S.mois===i?"selected":""}>${m}</option>`).join("")}
+          </select>
+        </div>
+        <div style="min-width:90px">
+          <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gris);font-weight:600;margin-bottom:5px">Année</div>
+          <select class="inp-block" onchange="S.annee=+this.value;save();render()">
+            ${[2025,2026,2027].map(y=>`<option value="${y}" ${S.annee===y?"selected":""}>${y}</option>`).join("")}
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="section-title">Actions</div>
+    <div class="card" style="padding:0 16px">
+      <div class="toggle-wrap" style="cursor:pointer" onclick="resetMonth()">
+        <div>
+          <div class="toggle-lbl">Réinitialiser le mois</div>
+          <div class="toggle-sub">Effacer tous les paiements cochés</div>
+        </div>
+        <span style="color:var(--gris);font-size:18px">↺</span>
+      </div>
+      <div class="toggle-wrap" style="cursor:pointer" onclick="if(confirm('Remettre toutes les charges par défaut ?')){S.charges[S.profil]=INIT[S.profil].map(c=>({...c}));save();render()}">
+        <div>
+          <div class="toggle-lbl">Réinitialiser les montants</div>
+          <div class="toggle-sub">Revenir aux montants d'origine</div>
+        </div>
+        <span style="color:var(--gris);font-size:18px">⟳</span>
+      </div>
+    </div>
+
+    <div style="text-align:center;padding:20px 0 8px">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--gris)">Budget RR · Rita Rostane</div>
+      <div style="font-size:11px;color:var(--gris-mid);margin-top:3px">v2.0 · Casablanca, Maroc</div>
+    </div>
+  </div>`;
+}
+
+// ─── INIT ──────────────────────────────────────────────────
+goTo(S.currentScreen || "dashboard");
+
+if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>{
+    navigator.serviceWorker.register("./sw.js")
+      .then(()=>console.log("SW ✓"))
+      .catch(e=>console.warn("SW:",e));
+  });
+}
+</script>
+</body>
+</html>
