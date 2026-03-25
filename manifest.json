@@ -1,0 +1,40 @@
+{
+  "name": "Checklist Charges – Rita Rostane",
+  "short_name": "Checklist Rita",
+  "description": "Suivi des charges mensuelles – Budget personnel Rita Rostane",
+  "start_url": "./checklist_rita.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#070712",
+  "theme_color": "#070712",
+  "lang": "fr",
+  "categories": ["finance", "productivity"],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Salaire actuel",
+      "short_name": "17 500 dh",
+      "description": "Ouvrir la checklist salaire actuel",
+      "url": "./checklist_rita.html?profil=s1"
+    },
+    {
+      "name": "Nouveau salaire",
+      "short_name": "24 000 dh",
+      "description": "Ouvrir la checklist nouveau salaire",
+      "url": "./checklist_rita.html?profil=s2"
+    }
+  ]
+}
