@@ -149,6 +149,70 @@ select{-webkit-appearance:none;appearance:none;background-image:url("data:image/
 ::-webkit-scrollbar{width:3px}
 ::-webkit-scrollbar-thumb{background:var(--gris-mid);border-radius:99px}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPA_URL = "https://kteqrhkoprsnhhyohgih.supabase.co";
+const SUPA_KEY = "sb_publishable_woOLzRtkihxPLKBhpmLxQA_hfoMUqid";
+const supa = supabase.createClient(SUPA_URL, SUPA_KEY);
+const USER_ID = "rita";
+
+async function syncToCloud(s) {
+  try {
+    const rows = [];
+    for (const profil of ["s1","s2"]) {
+      rows.push({
+        user_id: USER_ID,
+        profil: profil,
+        mois: s.mois,
+        annee: s.annee,
+        charges: s.charges,
+        checked: s.checked,
+        dates: s.dates,
+        sal: s.sal,
+        history: s.history || {},
+        updated_at: new Date().toISOString()
+      });
+    }
+    const { error } = await supa.from("budget_data").upsert(rows, { onConflict: "user_id,profil,mois,annee" });
+    if (error) console.warn("Sync error:", error.message);
+    else { showSyncBadge(); }
+  } catch(e) { console.warn("Sync failed:", e); }
+}
+
+async function loadFromCloud() {
+  try {
+    const { data, error } = await supa.from("budget_data")
+      .select("*").eq("user_id", USER_ID)
+      .order("updated_at", { ascending: false }).limit(1).single();
+    if (error || !data) return null;
+    return {
+      profil: data.profil || "s1",
+      mois: data.mois ?? new Date().getMonth(),
+      annee: data.annee ?? new Date().getFullYear(),
+      charges: data.charges || { s1:[], s2:[] },
+      checked: data.checked || { s1:{}, s2:{} },
+      dates: data.dates || { s1:{}, s2:{} },
+      sal: data.sal || { s1:17500, s2:24000 },
+      history: data.history || {},
+      filterCat: "TOUT",
+      currentScreen: "dashboard"
+    };
+  } catch(e) { return null; }
+}
+
+function showSyncBadge() {
+  let b = document.getElementById("sync-badge");
+  if (!b) {
+    b = document.createElement("div");
+    b.id = "sync-badge";
+    b.style.cssText = "position:fixed;top:12px;right:12px;background:#2E8B62;color:#fff;padding:6px 12px;border-radius:20px;font-size:11px;font-family:sans-serif;font-weight:600;z-index:9999;opacity:1;transition:opacity 1s";
+    b.textContent = "☁️ Sauvegardé";
+    document.body.appendChild(b);
+  }
+  b.style.opacity = "1";
+  setTimeout(() => { b.style.opacity = "0"; }, 2000);
+}
+</script>
 </head>
 <body>
 
@@ -238,7 +302,10 @@ function loadState() {
   };
 }
 
-function save() { try { localStorage.setItem("budget_rr_v1", JSON.stringify(S)); } catch(e){} }
+function save() {
+  try { localStorage.setItem("budget_rr_v1", JSON.stringify(S)); } catch(e){}
+  syncToCloud(S);
+}
 
 let S = loadState();
 let showAdd = false;
@@ -789,7 +856,13 @@ function renderSettings(){
 }
 
 // ─── INIT ──────────────────────────────────────────────────
-goTo(S.currentScreen || "dashboard");
+loadFromCloud().then(cloudState => {
+  if (cloudState && cloudState.charges && Object.keys(cloudState.charges).length > 0) {
+    S = { ...cloudState, filterCat: S.filterCat || "TOUT", currentScreen: S.currentScreen || "dashboard" };
+    try { localStorage.setItem("budget_rr_v1", JSON.stringify(S)); } catch(e){}
+  }
+  goTo(S.currentScreen || "dashboard");
+});
 
 if("serviceWorker" in navigator){
   window.addEventListener("load",()=>{
