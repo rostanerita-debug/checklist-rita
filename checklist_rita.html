@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Budget RR">
+<meta name="apple-mobile-web-app-title" content="RR Budget">
 <meta name="theme-color" content="#ffffff">
 <link rel="manifest" href="manifest.json">
-<title>Budget RR — Rita Rostane</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>RR Budget — Rita Rostane</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
@@ -21,14 +21,14 @@
   --shadow:0 2px 20px rgba(26,22,18,0.08);
   --shadow-lg:0 8px 40px rgba(26,22,18,0.12);
 }
-body{background:#F5F3F0;font-family:'DM Sans',sans-serif;color:var(--noir);min-height:100vh;padding-bottom:80px;overscroll-behavior:none}
-h1,h2,h3{font-family:'Cormorant Garamond',serif}
+body{background:#F5F3F0;font-family:'Plus Jakarta Sans',sans-serif;color:var(--noir);min-height:100vh;padding-bottom:80px;overscroll-behavior:none}
+h1,h2,h3{font-family:'Nunito',sans-serif}
 
 /* NAV */
 .nav{position:fixed;bottom:0;left:0;right:0;background:var(--blanc);border-top:1px solid var(--gris-mid);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -4px 20px rgba(26,22,18,0.06)}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 4px 8px;cursor:pointer;border:none;background:none;transition:all .2s;gap:3px}
 .nav-item .nav-icon{font-size:20px;transition:transform .2s}
-.nav-item .nav-lbl{font-size:10px;font-family:'DM Sans',sans-serif;font-weight:500;color:var(--gris);transition:color .2s;letter-spacing:.3px}
+.nav-item .nav-lbl{font-size:10px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:500;color:var(--gris);transition:color .2s;letter-spacing:.3px}
 .nav-item.active .nav-lbl{color:var(--gold)}
 .nav-item.active .nav-icon{transform:scale(1.1)}
 .nav-item:active{opacity:.7}
@@ -40,7 +40,7 @@ h1,h2,h3{font-family:'Cormorant Garamond',serif}
 /* HEADER */
 .page-header{padding:52px 0 20px;border-bottom:1px solid var(--gris-mid);margin-bottom:20px}
 .page-header .eyebrow{font-size:10px;letter-spacing:3px;color:var(--gold);font-weight:600;text-transform:uppercase;margin-bottom:6px}
-.page-header h1{font-size:32px;font-weight:600;color:var(--noir);line-height:1.1}
+.page-header h1{font-size:32px;font-weight:800;color:var(--noir);line-height:1.1}
 .page-header .subtitle{font-size:13px;color:var(--gris);margin-top:4px}
 
 /* CARDS */
@@ -48,8 +48,8 @@ h1,h2,h3{font-family:'Cormorant Garamond',serif}
 .card-gold{background:linear-gradient(135deg,var(--noir) 0%,#2D2520 100%);color:var(--blanc)}
 .card-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gris);font-weight:600;margin-bottom:6px}
 .card-label-light{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.5);font-weight:600;margin-bottom:6px}
-.card-value{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:600;line-height:1}
-.card-value-light{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:600;color:var(--blanc);line-height:1}
+.card-value{font-family:'Nunito',sans-serif;font-size:36px;font-weight:600;line-height:1}
+.card-value-light{font-family:'Nunito',sans-serif;font-size:36px;font-weight:600;color:var(--blanc);line-height:1}
 .card-sub{font-size:12px;color:var(--gris);margin-top:4px}
 .card-sub-light{font-size:12px;color:rgba(255,255,255,0.55);margin-top:4px}
 
@@ -63,10 +63,10 @@ h1,h2,h3{font-family:'Cormorant Garamond',serif}
 /* METRIC SMALL */
 .metric-sm{background:var(--gris-light);border-radius:var(--radius-sm);padding:12px 14px}
 .metric-sm .lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gris);font-weight:600;margin-bottom:4px}
-.metric-sm .val{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600}
+.metric-sm .val{font-family:'Nunito',sans-serif;font-size:22px;font-weight:600}
 
 /* SECTION TITLE */
-.section-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--noir);margin:20px 0 10px;display:flex;align-items:center;gap:8px}
+.section-title{font-family:'Nunito',sans-serif;font-size:20px;font-weight:600;color:var(--noir);margin:20px 0 10px;display:flex;align-items:center;gap:8px}
 .section-title::after{content:'';flex:1;height:1px;background:var(--gris-mid)}
 
 /* CHECKLIST */
@@ -80,15 +80,15 @@ h1,h2,h3{font-family:'Cormorant Garamond',serif}
 .check-btn:active{transform:scale(.9)}
 .charge-label{flex:1;font-size:13px;font-weight:500;color:var(--noir)}
 .charge-label.done{text-decoration:line-through;color:var(--gris)}
-.charge-amount{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;cursor:pointer;white-space:nowrap}
+.charge-amount{font-family:'Nunito',sans-serif;font-size:16px;font-weight:600;cursor:pointer;white-space:nowrap}
 .charge-amount.done{color:var(--gris);text-decoration:line-through}
 .badge-sm{display:inline-flex;padding:2px 7px;border-radius:20px;font-size:9px;font-weight:600;letter-spacing:.5px}
 .del-btn{font-size:12px;color:#D4A0A0;cursor:pointer;background:none;border:none;padding:0 3px;opacity:0;transition:opacity .15s}
 .charge-row:hover .del-btn{opacity:1}
 
 /* INPUT INLINE */
-.inp-inline{background:var(--gris-light);border:1.5px solid var(--gold);border-radius:6px;font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;padding:3px 7px;width:80px;text-align:right;outline:none;color:var(--noir)}
-.inp-block{background:var(--gris-light);border:1.5px solid var(--gris-mid);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:14px;padding:10px 14px;width:100%;outline:none;color:var(--noir);transition:border .2s}
+.inp-inline{background:var(--gris-light);border:1.5px solid var(--gold);border-radius:6px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:600;padding:3px 7px;width:80px;text-align:right;outline:none;color:var(--noir)}
+.inp-block{background:var(--gris-light);border:1.5px solid var(--gris-mid);border-radius:var(--radius-sm);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;padding:10px 14px;width:100%;outline:none;color:var(--noir);transition:border .2s}
 .inp-block:focus{border-color:var(--gold)}
 
 /* BOTTOM SHEET */
@@ -96,19 +96,19 @@ h1,h2,h3{font-family:'Cormorant Garamond',serif}
 .sheet{background:var(--blanc);border-radius:22px 22px 0 0;padding:24px 20px calc(24px + env(safe-area-inset-bottom));width:100%;max-width:500px;animation:slideUp .22s ease-out}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .sheet-handle{width:36px;height:4px;background:var(--gris-mid);border-radius:99px;margin:0 auto 20px}
-.sheet-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;margin-bottom:18px}
+.sheet-title{font-family:'Nunito',sans-serif;font-size:22px;font-weight:600;margin-bottom:18px}
 
 /* BUTTONS */
-.btn-primary{width:100%;padding:14px;background:var(--noir);border:none;border-radius:var(--radius-sm);color:var(--blanc);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:.5px;transition:all .15s}
+.btn-primary{width:100%;padding:14px;background:var(--noir);border:none;border-radius:var(--radius-sm);color:var(--blanc);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:.5px;transition:all .15s}
 .btn-primary:active{transform:scale(.97);background:#2D2520}
-.btn-ghost{width:100%;padding:13px;background:none;border:1.5px solid var(--gris-mid);border-radius:var(--radius-sm);color:var(--gris);font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;transition:all .15s}
+.btn-ghost{width:100%;padding:13px;background:none;border:1.5px solid var(--gris-mid);border-radius:var(--radius-sm);color:var(--gris);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;cursor:pointer;transition:all .15s}
 .btn-ghost:active{background:var(--gris-light)}
-.btn-gold{width:100%;padding:14px;background:linear-gradient(135deg,var(--gold),#D4A84B);border:none;border-radius:var(--radius-sm);color:var(--blanc);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:.5px;transition:all .15s;box-shadow:0 4px 14px rgba(184,150,62,0.35)}
+.btn-gold{width:100%;padding:14px;background:linear-gradient(135deg,var(--gold),#D4A84B);border:none;border-radius:var(--radius-sm);color:var(--blanc);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:.5px;transition:all .15s;box-shadow:0 4px 14px rgba(184,150,62,0.35)}
 .btn-gold:active{transform:scale(.97)}
 
 /* CAT PILLS */
 .cat-pill{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
-.cat-pill button{padding:7px 14px;border-radius:20px;font-size:11px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;transition:all .15s;border:1.5px solid var(--gris-mid);background:none;color:var(--gris)}
+.cat-pill button{padding:7px 14px;border-radius:20px;font-size:11px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;cursor:pointer;transition:all .15s;border:1.5px solid var(--gris-mid);background:none;color:var(--gris)}
 .cat-pill button.active{border-color:transparent;color:#fff}
 .cat-pill button:active{transform:scale(.95)}
 
@@ -126,7 +126,7 @@ h1,h2,h3{font-family:'Cormorant Garamond',serif}
 .hist-mois{font-weight:500;font-size:14px}
 .hist-sub{font-size:11px;color:var(--gris);margin-top:2px}
 .hist-right{text-align:right}
-.hist-pct{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600}
+.hist-pct{font-family:'Nunito',sans-serif;font-size:18px;font-weight:600}
 
 /* TOGGLE */
 .toggle-wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--gris-light)}
@@ -378,7 +378,7 @@ function renderDashboard(){
   return `
   <div class="screen active" id="screen-dashboard">
     <div class="page-header">
-      <div class="eyebrow">Budget personnel</div>
+      <div class="eyebrow">RR Budget</div>
       <h1>Bonjour, Rita</h1>
       <div class="subtitle">${MOIS_FR[S.mois]} ${S.annee} · ${S.profil==="s1"?"Salaire actuel":"Nouveau salaire"}</div>
     </div>
@@ -392,7 +392,7 @@ function renderDashboard(){
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center">
         <div class="card-sub-light">${nb}/${ch.length} charges payées</div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:#F0DFA0">${pct}%</div>
+        <div style="font-family:'Nunito',sans-serif;font-size:28px;font-weight:600;color:#F0DFA0">${pct}%</div>
       </div>
     </div>
 
@@ -432,14 +432,14 @@ function renderDashboard(){
             <div style="font-size:13px;font-weight:500">${esc(c.label)}</div>
             <div style="font-size:10px;color:var(--gris);margin-top:1px">${c.ech} · ${c.compte}</div>
           </div>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:var(--gris)">${fmt(c.montant)}</div>
+          <div style="font-family:'Nunito',sans-serif;font-size:15px;font-weight:600;color:var(--gris)">${fmt(c.montant)}</div>
         </div>`;
       }).join("")}
     </div>` : `
     <div class="section-title">Ce mois-ci</div>
     <div class="card" style="text-align:center;padding:28px">
       <div style="font-size:28px;margin-bottom:8px">🏆</div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600">Toutes les charges payées !</div>
+      <div style="font-family:'Nunito',sans-serif;font-size:20px;font-weight:600">Toutes les charges payées !</div>
       <div style="font-size:12px;color:var(--gris);margin-top:6px">Il te reste <strong style="color:#2E8B62">${fmt(resteReel)}</strong> en poche</div>
     </div>`}
 
@@ -480,7 +480,7 @@ function renderChecklist(){
         <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gris);font-weight:600;margin-bottom:7px">Catégorie</div>
         <div style="display:flex;gap:7px;flex-wrap:wrap">
           ${Object.entries(CAT_CFG).map(([cat,cfg])=>`
-            <button onclick="newCat='${cat}';render()" style="padding:7px 13px;border-radius:20px;font-size:11px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;border:1.5px solid ${newCat===cat?cfg.color:'var(--gris-mid)'};background:${newCat===cat?cfg.bg:'none'};color:${newCat===cat?cfg.color:'var(--gris)'}">
+            <button onclick="newCat='${cat}';render()" style="padding:7px 13px;border-radius:20px;font-size:11px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;cursor:pointer;border:1.5px solid ${newCat===cat?cfg.color:'var(--gris-mid)'};background:${newCat===cat?cfg.bg:'none'};color:${newCat===cat?cfg.color:'var(--gris)'}">
               ${cfg.icon} ${cfg.label}
             </button>`).join("")}
         </div>
@@ -499,7 +499,7 @@ function renderChecklist(){
       <div style="margin-bottom:20px">
         <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gris);font-weight:600;margin-bottom:5px">Échéance</div>
         <div style="display:flex;gap:6px">
-          ${["J1","J5","J10","Variable"].map(e=>`<button onclick="newEch='${e}';render()" style="flex:1;padding:8px;border-radius:var(--radius-sm);font-size:11px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;border:1.5px solid ${newEch===e?"var(--gold)":"var(--gris-mid)"};background:${newEch===e?"var(--gold-pale)":"none"};color:${newEch===e?"var(--gold)":"var(--gris)"}">${e}</button>`).join("")}
+          ${["J1","J5","J10","Variable"].map(e=>`<button onclick="newEch='${e}';render()" style="flex:1;padding:8px;border-radius:var(--radius-sm);font-size:11px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;cursor:pointer;border:1.5px solid ${newEch===e?"var(--gold)":"var(--gris-mid)"};background:${newEch===e?"var(--gold-pale)":"none"};color:${newEch===e?"var(--gold)":"var(--gris)"}">${e}</button>`).join("")}
         </div>
       </div>
 
@@ -521,7 +521,7 @@ function renderChecklist(){
     <div class="card" style="padding:14px 16px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
         <span style="font-size:12px;color:var(--gris)">Progression du mois</span>
-        <span style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600">${pct}%</span>
+        <span style="font-family:'Nunito',sans-serif;font-size:20px;font-weight:600">${pct}%</span>
       </div>
       <div class="prog-wrap" style="margin:0">
         <div class="prog-fill" style="width:${pct}%;background:linear-gradient(90deg,#B8963E,#D4A84B)"></div>
@@ -537,7 +537,7 @@ function renderChecklist(){
           return `<button onclick="S.filterCat='${cat}';render()" class="${active?'active':''}" style="${active&&cfg?`background:${cfg.color};border-color:${cfg.color}`:active?`background:var(--noir);border-color:var(--noir)`:""}">${cat==="TOUT"?"Tout":cfg.icon+" "+cfg.label.split(" ")[0]}</button>`;
         }).join("")}
       </div>
-      <button onclick="showAdd=true;render()" style="padding:7px 14px;border-radius:20px;background:var(--noir);color:#fff;border:none;font-size:11px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0">＋ Ajouter</button>
+      <button onclick="showAdd=true;render()" style="padding:7px 14px;border-radius:20px;background:var(--noir);color:#fff;border:none;font-size:11px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0">＋ Ajouter</button>
     </div>
 
     <div style="font-size:10px;color:var(--gris);text-align:center;margin-bottom:8px">Tape sur le montant pour modifier</div>
@@ -551,7 +551,7 @@ function renderChecklist(){
       <div class="cat-header" style="background:${cfg.bg}">
         <div style="display:flex;align-items:center;gap:7px">
           <span style="color:${cfg.color};font-size:13px">${cfg.icon}</span>
-          <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:${cfg.color}">${cat}</span>
+          <span style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:${cfg.color}">${cat}</span>
         </div>
         <span style="font-size:11px;color:${cfg.color};font-weight:500">${fmtShort(catPaye)} / ${fmtShort(catTotal)}</span>
       </div>
@@ -590,7 +590,7 @@ function renderChecklist(){
       </div>`;
     }).join("")}
 
-    <button onclick="resetMonth()" style="width:100%;padding:12px;background:none;border:1.5px solid var(--gris-mid);border-radius:var(--radius-sm);color:var(--gris);font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;margin-top:4px">↺ Réinitialiser le mois</button>
+    <button onclick="resetMonth()" style="width:100%;padding:12px;background:none;border:1.5px solid var(--gris-mid);border-radius:var(--radius-sm);color:var(--gris);font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;cursor:pointer;margin-top:4px">↺ Réinitialiser le mois</button>
   </div>`;
 }
 
@@ -627,12 +627,12 @@ function renderStats(){
     <div class="grid2">
       <div class="card" style="text-align:center;padding:16px">
         <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gris);font-weight:600;margin-bottom:6px">Taux de paiement</div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:700;color:${pct>=80?"#2E8B62":pct>=50?"#D4882A":"#C85F6E"};line-height:1">${pct}%</div>
+        <div style="font-family:'Nunito',sans-serif;font-size:42px;font-weight:700;color:${pct>=80?"#2E8B62":pct>=50?"#D4882A":"#C85F6E"};line-height:1">${pct}%</div>
         <div style="font-size:11px;color:var(--gris);margin-top:4px">${paye>=total?"Complété ✓":"En cours"}</div>
       </div>
       <div class="card" style="text-align:center;padding:16px">
         <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gris);font-weight:600;margin-bottom:6px">Épargne / mois</div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:#2E8B62;line-height:1">${fmtShort(epargneTotal)}</div>
+        <div style="font-family:'Nunito',sans-serif;font-size:28px;font-weight:700;color:#2E8B62;line-height:1">${fmtShort(epargneTotal)}</div>
         <div style="font-size:10px;color:var(--gris);margin-top:4px">MAD · ${Math.round((epargneTotal/getSal())*100)}% du salaire</div>
       </div>
     </div>
@@ -649,7 +649,7 @@ function renderStats(){
       `).join("")}
       <div style="border-top:1px solid var(--gris-light);margin-top:8px;padding-top:8px;display:flex;justify-content:space-between">
         <span style="font-size:12px;color:var(--gris)">Total</span>
-        <span style="font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600">${fmt(total)}</span>
+        <span style="font-family:'Nunito',sans-serif;font-size:16px;font-weight:600">${fmt(total)}</span>
       </div>
     </div>
 
@@ -665,7 +665,7 @@ function renderStats(){
             <div style="font-size:13px;font-weight:500">${esc(c.label)}</div>
             <div style="font-size:10px;color:var(--gris);margin-top:1px">${pctCharge}% du total</div>
           </div>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600">${fmt(c.montant)}</div>
+          <div style="font-family:'Nunito',sans-serif;font-size:15px;font-weight:600">${fmt(c.montant)}</div>
         </div>`;
       }).join("")}
     </div>
@@ -704,9 +704,9 @@ function renderSettings(){
 
     <!-- Avatar -->
     <div class="card" style="display:flex;align-items:center;gap:14px;padding:16px 18px">
-      <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--noir),#3D3020);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:#F0DFA0;flex-shrink:0">RR</div>
+      <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--noir),#3D3020);display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;font-size:20px;font-weight:700;color:#F0DFA0;flex-shrink:0">RR</div>
       <div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600">Rita Rostane</div>
+        <div style="font-family:'Nunito',sans-serif;font-size:20px;font-weight:600">Rita Rostane</div>
         <div style="font-size:12px;color:var(--gris);margin-top:2px">Account Director · Casablanca</div>
       </div>
     </div>
@@ -720,8 +720,8 @@ function renderSettings(){
           <div class="toggle-sub">${S.profil==="s1"?"Salaire actuel (17 500 MAD)":"Nouveau salaire (24 000 MAD)"}</div>
         </div>
         <div style="display:flex;background:var(--gris-light);border-radius:8px;padding:3px;gap:3px">
-          <button onclick="S.profil='s1';save();render()" style="padding:5px 10px;border-radius:6px;font-size:11px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;border:none;background:${S.profil==="s1"?"var(--blanc)":"transparent"};color:${S.profil==="s1"?"var(--noir)":"var(--gris)"};box-shadow:${S.profil==="s1"?"0 1px 4px rgba(0,0,0,.1)":"none"}">S1</button>
-          <button onclick="S.profil='s2';save();render()" style="padding:5px 10px;border-radius:6px;font-size:11px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;border:none;background:${S.profil==="s2"?"var(--blanc)":"transparent"};color:${S.profil==="s2"?"var(--noir)":"var(--gris)"};box-shadow:${S.profil==="s2"?"0 1px 4px rgba(0,0,0,.1)":"none"}">S2</button>
+          <button onclick="S.profil='s1';save();render()" style="padding:5px 10px;border-radius:6px;font-size:11px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;cursor:pointer;border:none;background:${S.profil==="s1"?"var(--blanc)":"transparent"};color:${S.profil==="s1"?"var(--noir)":"var(--gris)"};box-shadow:${S.profil==="s1"?"0 1px 4px rgba(0,0,0,.1)":"none"}">S1</button>
+          <button onclick="S.profil='s2';save();render()" style="padding:5px 10px;border-radius:6px;font-size:11px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;cursor:pointer;border:none;background:${S.profil==="s2"?"var(--blanc)":"transparent"};color:${S.profil==="s2"?"var(--noir)":"var(--gris)"};box-shadow:${S.profil==="s2"?"0 1px 4px rgba(0,0,0,.1)":"none"}">S2</button>
         </div>
       </div>
       <div class="toggle-wrap">
@@ -736,7 +736,7 @@ function renderSettings(){
           </div>
         `:`
           <div style="display:flex;align-items:center;gap:8px">
-            <span style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600">${fmt(sal)}</span>
+            <span style="font-family:'Nunito',sans-serif;font-size:18px;font-weight:600">${fmt(sal)}</span>
             <button onclick="editSalVal='${sal}';editSal=true;render()" style="background:var(--gris-light);border:none;border-radius:6px;padding:4px 9px;font-size:11px;cursor:pointer;color:var(--gris)">✎</button>
           </div>
         `}
@@ -782,7 +782,7 @@ function renderSettings(){
     </div>
 
     <div style="text-align:center;padding:20px 0 8px">
-      <div style="font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--gris)">Budget RR · Rita Rostane</div>
+      <div style="font-family:'Nunito',sans-serif;font-size:14px;color:var(--gris)">RR Budget · Rita Rostane</div>
       <div style="font-size:11px;color:var(--gris-mid);margin-top:3px">v2.0 · Casablanca, Maroc</div>
     </div>
   </div>`;
