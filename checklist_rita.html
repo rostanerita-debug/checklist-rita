@@ -154,7 +154,143 @@ select{-webkit-appearance:none;appearance:none;background-image:url("data:image/
 const SUPA_URL = "https://kteqrhkoprsnhhyohgih.supabase.co";
 const SUPA_KEY = "sb_publishable_woOLzRtkihxPLKBhpmLxQA_hfoMUqid";
 const supa = supabase.createClient(SUPA_URL, SUPA_KEY);
-const USER_ID = "rita";
+let USER_ID = "rita";
+let currentUser = null;
+
+// ── AUTH ──────────────────────────────────────────────────
+async function initAuth() {
+  const { data: { session } } = await supa.auth.getSession();
+  if (session) {
+    currentUser = session.user;
+    USER_ID = session.user.id;
+    return true;
+  }
+  return false;
+}
+
+async function signInWithGoogle() {
+  await supa.auth.signInWithOAuth({
+    provider: "google",
+    options: { redirectTo: window.location.href }
+  });
+}
+
+async function signInWithEmail(email, password) {
+  const { data, error } = await supa.auth.signInWithPassword({ email, password });
+  if (error) {
+    if (error.message.includes("Invalid")) {
+      // Essayer de créer le compte
+      const { data: d2, error: e2 } = await supa.auth.signUp({ email, password });
+      if (e2) return { error: e2.message };
+      if (d2.user) {
+        currentUser = d2.user;
+        USER_ID = d2.user.id;
+        return { success: true, newUser: true };
+      }
+    }
+    return { error: error.message };
+  }
+  currentUser = data.user;
+  USER_ID = data.user.id;
+  return { success: true };
+}
+
+async function signOut() {
+  await supa.auth.signOut();
+  currentUser = null;
+  USER_ID = "rita";
+  showLoginScreen();
+}
+
+function showLoginScreen() {
+  document.getElementById("app").innerHTML = renderLogin();
+  document.querySelectorAll(".nav-item").forEach(b => b.style.display = "none");
+}
+
+function renderLogin() {
+  return `
+  <div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;background:#F5F3F0">
+    <div style="width:100%;max-width:380px">
+
+      <!-- Logo -->
+      <div style="text-align:center;margin-bottom:36px">
+        <div style="width:72px;height:72px;border-radius:18px;background:linear-gradient(135deg,#1A1612,#3D3020);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;box-shadow:0 8px 30px rgba(26,22,18,0.2)">
+          <span style="font-family:'Nunito',sans-serif;font-size:24px;font-weight:900;color:#F0D78C">RR</span>
+        </div>
+        <div style="font-family:'Nunito',sans-serif;font-size:26px;font-weight:800;color:#1A1612">RR Budget</div>
+        <div style="font-size:13px;color:#6B6660;margin-top:4px;font-family:'Plus Jakarta Sans',sans-serif">Gestion budgétaire · Rita Rostane</div>
+      </div>
+
+      <!-- Carte login -->
+      <div style="background:#fff;border-radius:20px;padding:24px;box-shadow:0 4px 24px rgba(26,22,18,0.1)">
+
+        <!-- Email -->
+        <div style="margin-bottom:12px">
+          <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#6B6660;font-weight:600;margin-bottom:5px;font-family:'Plus Jakarta Sans',sans-serif">Email</div>
+          <input id="login-email" type="email" inputmode="email" placeholder="rostane.rita@gmail.com"
+            style="width:100%;padding:12px 14px;border:1.5px solid #E8E4DF;border-radius:10px;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;outline:none;color:#1A1612;background:#F5F3F0"
+            onfocus="this.style.borderColor='#B8963E'" onblur="this.style.borderColor='#E8E4DF'">
+        </div>
+
+        <!-- Mot de passe -->
+        <div style="margin-bottom:18px">
+          <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#6B6660;font-weight:600;margin-bottom:5px;font-family:'Plus Jakarta Sans',sans-serif">Mot de passe</div>
+          <input id="login-pwd" type="password" placeholder="••••••••"
+            style="width:100%;padding:12px 14px;border:1.5px solid #E8E4DF;border-radius:10px;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;outline:none;color:#1A1612;background:#F5F3F0"
+            onfocus="this.style.borderColor='#B8963E'" onblur="this.style.borderColor='#E8E4DF'"
+            onkeydown="if(event.key==='Enter')doEmailLogin()">
+        </div>
+
+        <!-- Erreur -->
+        <div id="login-error" style="display:none;background:#FDF0F0;color:#C85F6E;border-radius:8px;padding:10px 12px;font-size:12px;margin-bottom:12px;font-family:'Plus Jakarta Sans',sans-serif"></div>
+
+        <!-- Btn email -->
+        <button onclick="doEmailLogin()" style="width:100%;padding:14px;background:#1A1612;border:none;border-radius:10px;color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:10px;letter-spacing:.3px">
+          Connexion / Inscription
+        </button>
+
+        <!-- Séparateur -->
+        <div style="display:flex;align-items:center;gap:10px;margin:14px 0">
+          <div style="flex:1;height:1px;background:#E8E4DF"></div>
+          <div style="font-size:11px;color:#6B6660;font-family:'Plus Jakarta Sans',sans-serif">ou</div>
+          <div style="flex:1;height:1px;background:#E8E4DF"></div>
+        </div>
+
+        <!-- Btn Google -->
+        <button onclick="signInWithGoogle()" style="width:100%;padding:13px;background:#fff;border:1.5px solid #E8E4DF;border-radius:10px;color:#1A1612;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px">
+          <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+          Continuer avec Google
+        </button>
+      </div>
+
+      <div style="text-align:center;margin-top:16px;font-size:11px;color:#6B6660;font-family:'Plus Jakarta Sans',sans-serif">
+        Tes données sont privées et sécurisées ✓
+      </div>
+    </div>
+  </div>`;
+}
+
+async function doEmailLogin() {
+  const email = document.getElementById("login-email").value.trim();
+  const pwd = document.getElementById("login-pwd").value;
+  const errEl = document.getElementById("login-error");
+  if (!email || !pwd) { errEl.style.display="block"; errEl.textContent="Remplis l'email et le mot de passe."; return; }
+  errEl.style.display="none";
+  const btn = document.querySelector("#app button");
+  const result = await signInWithEmail(email, pwd);
+  if (result.error) { errEl.style.display="block"; errEl.textContent=result.error; return; }
+  afterLogin();
+}
+
+async function afterLogin() {
+  document.querySelectorAll(".nav-item").forEach(b => b.style.display = "");
+  const cloudState = await loadFromCloud();
+  if (cloudState && cloudState.charges && Object.keys(cloudState.charges).length > 0) {
+    S = { ...cloudState, filterCat: "TOUT", currentScreen: "dashboard" };
+    try { localStorage.setItem("budget_rr_v1", JSON.stringify(S)); } catch(e){}
+  }
+  goTo("dashboard");
+}
 
 async function syncToCloud(s) {
   try {
@@ -856,12 +992,13 @@ function renderSettings(){
 }
 
 // ─── INIT ──────────────────────────────────────────────────
-loadFromCloud().then(cloudState => {
-  if (cloudState && cloudState.charges && Object.keys(cloudState.charges).length > 0) {
-    S = { ...cloudState, filterCat: S.filterCat || "TOUT", currentScreen: S.currentScreen || "dashboard" };
-    try { localStorage.setItem("budget_rr_v1", JSON.stringify(S)); } catch(e){}
+// Vérifier auth au démarrage
+initAuth().then(loggedIn => {
+  if (loggedIn) {
+    afterLogin();
+  } else {
+    showLoginScreen();
   }
-  goTo(S.currentScreen || "dashboard");
 });
 
 if("serviceWorker" in navigator){
